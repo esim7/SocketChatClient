@@ -44,11 +44,11 @@ namespace SocketChatClient
 
         private void SendMessageBtn(object sender, RoutedEventArgs e)
         {        
-            SendMessageAsync();
+            SendMessage();
             RefreshData();
         }
 
-        public void SendMessageAsync()
+        public void SendMessage()
         {         
             try
             {
@@ -94,5 +94,4 @@ namespace SocketChatClient
             itemsControl.ItemsSource = Messages;
         }
     }
-
 }
