@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,35 +17,39 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
+
 namespace SocketChatClient
+
 {
+
     /// <summary>
+
     /// Interaction logic for MainWindow.xaml
+
     /// </summary>
+
     public partial class MainWindow : Window
     {
-        static int port = 8005; // порт сервера
-        static string address = "127.0.0.1"; // адрес сервера
+        static int port = 3231;
+        static string address = "127.0.0.1"; 
 
         public List<Message> Messages = new List<Message>();
 
         public MainWindow()
         {
             InitializeComponent();
-            itemsControl.ItemsSource = Messages;
+            itemsControl.ItemsSource = Messages;            
         }
-
-
 
         private void SendMessageBtn(object sender, RoutedEventArgs e)
-        {
-            itemsControl.ItemsSource = null;
-            SendMessage();
-            itemsControl.ItemsSource = Messages;
+        {        
+            SendMessageAsync();
+            RefreshData();
         }
 
-        public void SendMessage()
-        {
+        public void SendMessageAsync()
+        {         
             try
             {
                 IPEndPoint ipPoint = new IPEndPoint(IPAddress.Parse(address), port);
@@ -61,7 +66,6 @@ namespace SocketChatClient
                 byte[] data = Encoding.Unicode.GetBytes(message);
                 socket.Send(data);
 
-                // получаем ответ
                 data = new byte[256];
                 StringBuilder builder = new StringBuilder();
                 int bytes = 0;
@@ -83,5 +87,12 @@ namespace SocketChatClient
                 MessageBox.Show(ex.Message);
             }
         }
+
+        public void RefreshData()
+        {
+            itemsControl.ItemsSource = null;
+            itemsControl.ItemsSource = Messages;
+        }
     }
+
 }
